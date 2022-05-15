@@ -1,0 +1,6 @@
+## Interface: 90200
+## Title: BrisbaneViceWarnings
+## Author: Alec Bassingthwaighte
+## Version: 0.1
+
+main.lua
