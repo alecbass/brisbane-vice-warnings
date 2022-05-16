@@ -1,5 +1,6 @@
 -- TODO(alec): Add voice lines from our favourite Brisbane Vice heroes
 local dramaticMusicPath = "Interface\\Addons\\BrisbaneViceWarnings\\dramatic.mp3"
+local oscarRingJackedPath = "Interface\\Addons\\BrisbaneViceWarnings\\oscar_ring_jacked.mp3"
 
 -- Register the main frame
 local frame = CreateFrame("Frame", "BrisbaneViceWarningsFrame", UIParent);
@@ -142,7 +143,7 @@ local function HandleAchievementEarned()
 end
 
 local function HandleScreenshotSucceeded()
-    HandleSoundStarted(PlaySoundFile(dramaticMusicPath))
+    HandleSoundStarted(PlaySoundFile(oscarRingJackedPath))
 end
 
 local function HandlePlayerDead()
