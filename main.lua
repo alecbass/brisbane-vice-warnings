@@ -23,6 +23,10 @@ end
 local isInInstance = false
 local isPlayingMusic = false
 
+-- Loot
+local isLootRolling = false
+local neededRollId = nil
+
 --
 -- Utils
 --
@@ -95,10 +99,38 @@ local function HandleStopSound()
     isPlayingMusic = false
 end
 
+-- Loot
+local function ResetLootRoll()
+    isLootRolling = false
+    neededRollId = nil
+end
+
 --
 -- Event handlers
 -- https://wowwiki-archive.fandom.com/wiki/Events_A-Z_(full_list)
 --
+
+-- Loot
+-- local function HandleLootStart(rollId, rollTime)
+--     isLootRolling = true
+-- end
+
+-- rollType is 1 for Need, 2 for Greed, 3 for Disenchant
+local function HandleLootRoll(rollId, rollType)
+    if rollType == 1 then
+        neededRollId = rollId
+    end
+end
+
+local function HandleLootChatMessage(message)
+    if string.find(message, "received") and neededRollId then
+        local _, name = GetLootRollItemInfo(neededRollId)
+        if string.find(message, name) then
+            print("Jacked a fucking 6 int ring")
+            ResetLootRoll()
+        end
+    end
+end
 
 local function HandleUpdateShapeShiftForm()
     -- TODO(alec): Check buffs for druid form and make an Oscar meow if in cat form
@@ -149,6 +181,13 @@ local function HandleReadyCheck(requestPlayerName, num)
 end
 
 local function HandleEvent(self, event, unit, spellName)
+    -- Loot
+    if event == "START_LOOT_ROLL" then
+        HandleLootRoll(self.rollID, self.rollType)
+    elseif event == "CHAT_MSG_LOOT" then
+        HandleLootChatMessage(self.text)
+    end
+
     if event == "SCREENSHOT_SUCCEEDED" then
         HandleScreenshotSucceeded()
     end
@@ -165,6 +204,9 @@ end
 -- end
 
 frame:RegisterEvent("SCREENSHOT_SUCCEEDED")
+frame:RegisterEvent("START_LOOT_ROLL")
+frame:RegisterEvent("CONFIRM_LOOT_ROLL")
+frame:RegisterEvent("CHAT_MSG_LOOT")
 -- frame:RegisterEvent("UNIT_AURA")
 -- frame:RegisterEvent("PLAYER_REGEN_DISABLED")
 -- frame:RegisterEvent("PLAYER_REGEN_ENABLED")
