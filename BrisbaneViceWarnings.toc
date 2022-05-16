@@ -1,4 +1,4 @@
-## Interface: 90200
+## Interface: 20504
 ## Title: BrisbaneViceWarnings
 ## Author: Alec Bassingthwaighte
 ## Version: 0.1
